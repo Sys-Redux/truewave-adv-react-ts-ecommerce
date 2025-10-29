@@ -55,6 +55,14 @@ const cartSlice = createSlice({
             }
         },
 
+        // Remove item from cart
+        removeFromCart: (state, action: PayloadAction<number>) => {
+            const productId = action.payload;
+            state.items = state.items.filter((item) => item.product.id !== productId);
+            // Save updated cart to storage
+            saveCartToStorage(state.items);
+        },
+
         // Clear the cart
         clearCart: (state) => {
             state.items = [];
@@ -63,7 +71,7 @@ const cartSlice = createSlice({
     },
 });
 
-export const { addToCart, updateQuantity, clearCart } = cartSlice.actions;
+export const { addToCart, updateQuantity, removeFromCart, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;
 
 // Selectors (helpers to access cart data)

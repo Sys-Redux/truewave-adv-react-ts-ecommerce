@@ -59,11 +59,11 @@
 
 @layer base {
   * {
-    @apply border-[--color-border];
+    @apply border-border;
   }
 
   body {
-    @apply bg-[--color-bg-primary] text-[--color-text-primary];
+    @apply bg-bg-primary text-text-primary;
     @apply font-sans antialiased;
 
     /* Subtle background texture */
@@ -79,16 +79,16 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-[--color-bg-secondary];
+    @apply bg-bg-secondary;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-[--color-accent];
+    @apply bg-accent;
     border-radius: 5px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-[--color-accent-hover];
+    @apply bg-accent-hover;
   }
 
   /* Selection Color */
@@ -107,17 +107,6 @@
 
 /* Utility classes for cyber effects */
 @layer utilities {
-  .glow-cyan {
-    box-shadow: var(--shadow-cyan);
-  }
-
-  .glow-purple {
-    box-shadow: var(--shadow-purple);
-  }
-
-  .glow-pink {
-    box-shadow: var(--shadow-pink);
-  }
 
   .text-gradient-cyber {
     background: var(--gradient-cyber);

@@ -13,11 +13,11 @@ export const CategoryFilter = ({
 
     if (isLoading) {
         return (
-            <div className='flex items-center gap-3 bg-[--color-bg-secondary] px-4 py-3 rounded-lg
-                border border-[--color-border]'>
-                <div className='w-4 h-4 border-2 border-[--color-accent] border-t-transparent
+            <div className='flex items-center gap-3 bg-bg-secondary px-4 py-3 rounded-lg
+                border border-border'>
+                <div className='w-4 h-4 border-2 border-accent border-t-transparent
                     rounded-full animate-spin' />
-                <span className='text-[--color-text-secondary] text-sm'>
+                <span className='text-text-secondary text-sm'>
                     Loading Categories...
                 </span>
             </div>
@@ -26,7 +26,7 @@ export const CategoryFilter = ({
 
     if (error) {
         return (
-            <div className='bg-[--color-secondary] px-4 py-3 rounded-lg border border-[--color-error]
+            <div className='bg-bg-secondary px-4 py-3 rounded-lg border border-error
                 text-sm'>
                 Error loading categories.
             </div>
@@ -34,11 +34,11 @@ export const CategoryFilter = ({
     }
 
     return (
-        <main className='flex items-center gap-3 bg-[--color-bg-secondary] px-4 py-3 rounded-lg
-            border border-[--color-border] hover:border-[--color-accent] transition-colors'>
+        <div className='flex items-center gap-3 bg-bg-secondary px-4 py-3 rounded-lg
+            border border-border hover:border-border-accent transition-colors'>
                 <label
                     htmlFor='category'
-                    className='text-[--color-text-primary] font-medium text-sm uppercase tracking-wide'
+                    className='text-text-primary font-medium text-sm uppercase tracking-wide'
                 >
                     Filter:
                 </label>
@@ -46,10 +46,10 @@ export const CategoryFilter = ({
                     id='category'
                     value={selectedCategory || ''}
                     onChange={(e) => onCategoryChange(e.target.value || null)}
-                    className='bg-[--color-bg-elevated] text-[--color-text-primary] border
-                        border-[--color-border-accent] rounded-md px-4 py-2 focus:outline-none
-                        focus:border-[--color-accent] focus:glow-cyan cursor-pointer transition-all
-                        hover:border-[--color-accent] font-mono text-sm'
+                    className='bg-bg-elevated text-text-primary border
+                        border-border rounded-md px-4 py-2 focus:outline-none hover:border-accent
+                        cursor-pointer transition-all font-mono text-sm focus:shadow-cyan
+                        relative z-10'
                 >
                     <option value=''>All Categories</option>
                     {categories?.map((category) => (
@@ -58,6 +58,6 @@ export const CategoryFilter = ({
                         </option>
                     ))}
                 </select>
-            </main>
+            </div>
     );
 };
