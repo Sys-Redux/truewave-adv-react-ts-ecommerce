@@ -3,6 +3,8 @@ import { ShoppingBag, Trash2 } from 'lucide-react';
 import { CartItem } from './CartItem';
 import { clearCart, selectCartItems, selectCartTotal, selectCartItemCount } from '../../store/cartSlice';
 import type { RootState } from '../../store/store';
+import { Toaster } from 'react-hot-toast';
+import { checkoutToast } from '../../utils/toasts';
 
 export const ShoppingCart = () => {
     const dispatch = useDispatch();
@@ -19,7 +21,7 @@ export const ShoppingCart = () => {
         // Simulating Checkout
         if (window.confirm('Proceed to checkout?')) {
             dispatch(clearCart());
-            alert('Thank you for your purchase!');
+            checkoutToast(itemCount, total);
         };
     };
 
@@ -50,6 +52,7 @@ export const ShoppingCart = () => {
                 >
                     Continue Shopping
                 </a>
+                <Toaster />
             </div>
         );
     }

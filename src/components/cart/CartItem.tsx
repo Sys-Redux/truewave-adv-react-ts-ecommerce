@@ -2,6 +2,7 @@ import { Minus, Plus, Trash2 } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { updateQuantity, removeFromCart } from '../../store/cartSlice';
 import type { CartItem as CartItemType } from '../../utils/storage';
+import { Toaster } from 'react-hot-toast';
 
 interface CartItemProps {
     item: CartItemType;
@@ -64,13 +65,16 @@ export const CartItem = ({ item }: CartItemProps) => {
 
                         {/* Remove Button */}
                         <button
-                            onClick={handleRemove}
+                            onClick={() => {
+                                handleRemove();
+                            }}
                             className='text-text-muted hover:text-error transition-colors p-2
                                 rounded-md hover:bg-bg-elevated'
                             aria-label={`Remove ${product.title} from cart`}
                         >
                             <Trash2 className='w-5 h-5' />
                         </button>
+                        <Toaster />
                     </div>
 
                     {/* Price and Quantity Controls */}

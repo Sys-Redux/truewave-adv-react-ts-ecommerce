@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Product } from '../../types/product';
 import { Star } from 'lucide-react';
+import { Toaster } from 'react-hot-toast';
 
 interface ProductCardProps {
     product: Product;
@@ -23,7 +24,6 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
     // Fallback placeholder
     const placeholderImage =
         `https://via.placeholder.com/300x300/1e293b/06b6d4?text=${encodeURIComponent(product.title.slice(0, 20))}`;
-
 
 
     return (
@@ -82,13 +82,14 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
                         ${product.price.toFixed(2)}
                     </span>
                     <button
-                        onClick={() => onAddToCart(product)}
+                        onClick={() => (onAddToCart(product))}
                         className='bg-accent hover:bg-accent-hover text-bg-primary
                             px-4 py-2 rounded-md transition-all duration-200 font-medium text-sm
                             hover:shadow-cyan shrink-0 relative'
                     >
                         Add to Cart
                     </button>
+                    <Toaster />
                 </div>
             </div>
         </div>

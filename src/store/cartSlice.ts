@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { Product } from '../types/product';
 import { type CartItem, saveCartToStorage, loadCartFromStorage, clearCartFromStorage } from '../utils/storage';
+import { removeFromCartToast, addToCartToast } from '../utils/toasts';
 
 interface CartState {
     items: CartItem[];
@@ -27,6 +28,7 @@ const cartSlice = createSlice({
             } else {
                 // New product, add to cart
                 state.items.push({ product, quantity: 1 });
+                addToCartToast(product.title);
             }
 
             // Save updated cart to storage
@@ -46,6 +48,7 @@ const cartSlice = createSlice({
                 if (quantity <= 0) {
                     state.items = state.items.filter(
                         (item) => item.product.id !== productId);
+                    removeFromCartToast(item.product.title);
                 } else {
                     item.quantity = quantity;
                 }
@@ -58,7 +61,12 @@ const cartSlice = createSlice({
         // Remove item from cart
         removeFromCart: (state, action: PayloadAction<number>) => {
             const productId = action.payload;
-            state.items = state.items.filter((item) => item.product.id !== productId);
+            const item = state.items.find((item) => item.product.id === productId);
+            if (!item) return;
+
+            state.items = state.items.filter(
+                (item) => item.product.id !== productId);
+            removeFromCartToast(item.product.title);
             // Save updated cart to storage
             saveCartToStorage(state.items);
         },
