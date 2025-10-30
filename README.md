@@ -12,7 +12,7 @@ A fully-featured e-commerce application built with React, TypeScript, and Redux 
 
 ## 🚀 Live Demo
 
-**[View Live Demo](#)** *(Coming Soon)*
+**[View Live Demo](#)** *(https://truewave.netlify.app/)*
 
 ## 📋 Table of Contents
 
