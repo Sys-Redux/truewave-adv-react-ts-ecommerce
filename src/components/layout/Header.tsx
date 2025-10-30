@@ -1,5 +1,6 @@
-import { ShoppingCart, Home as HomeIcon } from 'lucide-react';
+import { ShoppingCart, Home as HomeIcon, Sun, Moon } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTheme } from '../../hooks/useTheme';
 
 interface HeaderProps {
   cartItemCount: number;
@@ -9,6 +10,7 @@ interface HeaderProps {
 export const Header = ({ cartItemCount, onCartClick }: HeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const isCartPage = location.pathname === '/cart';
 
   return (
@@ -40,6 +42,22 @@ export const Header = ({ cartItemCount, onCartClick }: HeaderProps) => {
 
           {/* Navigation buttons */}
           <div className="flex items-center gap-3">
+
+            {/* Theme toggle button */}
+            <button
+              onClick={toggleTheme}
+              className='flex items-center justify-center bg-bg-elevated w-10 h-10 hover:bg-bg-hover
+                border border-border rounded-lg hover:border-accent transition-all duration-200'
+              aria-label='Toggle theme'
+              title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            >
+              {theme === 'light' ? (
+                <Moon className='w-5 h-5 text-text-secondary' />
+              ) : (
+                <Sun className='w-5 h-5 text-text-accent' />
+              )}
+            </button>
+
             {/* Home button - only show on cart page */}
             {isCartPage && (
               <button
