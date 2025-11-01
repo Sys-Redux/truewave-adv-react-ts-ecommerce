@@ -3,13 +3,13 @@ import { getAuth, type Auth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBhhW09aFFDkwuHihjl9Smv6ZL4iUzwypI",
-  authDomain: "truewave-553ca.firebaseapp.com",
-  projectId: "truewave-553ca",
-  storageBucket: "truewave-553ca.firebasestorage.app",
-  messagingSenderId: "825482410920",
-  appId: "1:825482410920:web:801084d4e28630967f7b9d",
-  measurementId: "G-E7PN4ZRQ3P"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 
