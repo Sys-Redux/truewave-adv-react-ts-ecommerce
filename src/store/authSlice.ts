@@ -168,15 +168,17 @@ export const selectAuthInitialized = (state: RootState) => state.auth.initialize
 // ==================================================================================
 
 // KEY FUNCTION: Call this once on app startup to listen for auth state changes
-export const initializeAuthListener = (dispatch: AppDispatch) => {
-    onAuthStateChanged(auth, (firebaseUser) => {
+
+export const initializeAuthListener = (dispatch: AppDispatch): (() => void) => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
         if (firebaseUser) {
-            // User is Signed In
             const user = authService.mapFirebaseUser(firebaseUser);
             dispatch(setUser(user));
         } else {
-            // User is Signed Out
             dispatch(setUser(null));
         }
     });
+
+    // Return the unsubscribe function so caller can cleanup if needed
+    return unsubscribe;
 };

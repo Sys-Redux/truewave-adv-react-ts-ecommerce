@@ -9,8 +9,13 @@ export const store = configureStore({
     },
 });
 
-// Initialize Firebase auth listener to sync auth state
-initializeAuthListener(store.dispatch);
+// Initialize Firebase auth listener & cleanup function
+export const unsubscribeAuth = initializeAuthListener(store.dispatch);
+
+// Optional cleanup function for testing
+export const cleanupStore = () => {
+    unsubscribeAuth();
+};
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
