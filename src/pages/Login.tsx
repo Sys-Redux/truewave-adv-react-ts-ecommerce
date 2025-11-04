@@ -3,7 +3,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { LogIn, Mail, Lock, AlertCircle } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../hooks/useAppDispatch.ts';
 import { login, selectAuthLoading, selectAuthError, clearError } from '../store/authSlice.ts';
-import { toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
+import { errorfulToast, successfulToast } from '../utils/toasts.ts';
 
 export const Login = () => {
     const dispatch = useAppDispatch();
@@ -24,7 +25,7 @@ export const Login = () => {
 
         // Basic validation
         if (!email || !password) {
-            toast.error('Please fill in all fields');
+            errorfulToast('❌ Please fill in all fields');
             return;
         }
 
@@ -33,12 +34,12 @@ export const Login = () => {
 
         // Check if login succeeded
         if (login.fulfilled.match(result)) {
-            toast.success('Welcome back!');
+            successfulToast('Welcome back! 😀');
             dispatch(clearError());
             navigate(from, { replace: true });
         } else {
             // Error handled by Redux state and displayed below
-            toast.error(error || 'Login failed');
+            errorfulToast(error || '❌ Login failed');
         };
     };
 
@@ -192,6 +193,7 @@ export const Login = () => {
                 <div className='absolute -inset-1 bg-linear-to-r from-accent/20 to-secondary/20
                     rounded-2xl blur-xl -z-10 opacity-50' />
             </div>
+            <Toaster />
         </div>
     );
 };

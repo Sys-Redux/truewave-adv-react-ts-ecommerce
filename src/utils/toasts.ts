@@ -2,7 +2,7 @@ import toast from 'react-hot-toast';
 
 export const toasts = {
     addToCartToast: (productTitle: string) => {
-        toast.success(`${productTitle} added to cart!`, {
+        toast.success(`${productTitle} added to cart! 🛒`, {
             style: {
                 background: '#1e293b',
                 color: '#e2e8f0',
@@ -11,9 +11,8 @@ export const toasts = {
             position: 'top-center',
         });
     },
-
     removeFromCartToast: (productTitle: string) => {
-        toast.error(`${productTitle} removed from cart.`, {
+        toast.error(`${productTitle} removed from cart. ❌`, {
             style: {
                 background: '#1e293b',
                 color: '#e2e8f0',
@@ -24,7 +23,29 @@ export const toasts = {
     },
 
     checkoutToast: (totalItems: number, totalPrice: number) => {
-        toast.success(`Checkout successful! ${totalItems} items purchased for $${totalPrice.toFixed(2)}.`, {
+        toast.success(`Checkout successful! ✅ ${totalItems} items purchased for $${totalPrice.toFixed(2)}.`, {
+            style: {
+                background: '#1e293b',
+                color: '#e2e8f0',
+                border: '1px solid #10b981',
+            },
+            position: 'top-center',
+        });
+    },
+
+    errorfulToast: (errorMessage: string) => {
+        toast.error(errorMessage, {
+            style: {
+                background: '#1e293b',
+                color: '#e2e8f0',
+                border: '1px solid #f59e0b',
+            },
+            position: 'top-center',
+        });
+    },
+
+    successfulToast: (successMessage: string) => {
+        toast.success(successMessage, {
             style: {
                 background: '#1e293b',
                 color: '#e2e8f0',
@@ -35,4 +56,10 @@ export const toasts = {
     },
 };
 
-export const { addToCartToast, removeFromCartToast, checkoutToast } = toasts;
+export const {
+    addToCartToast,
+    removeFromCartToast,
+    checkoutToast,
+    errorfulToast,
+    successfulToast,
+} = toasts;
