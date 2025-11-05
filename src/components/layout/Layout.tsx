@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../hooks/useAppDispatch';
 import { Header } from './Header';
 import { type RootState } from '../../store/store';
 
@@ -13,7 +13,7 @@ export const Layout = ({ children }: LayoutProps) => {
     const location = useLocation();
 
     // Get cart item count from Redux store
-    const cartItemCount = useSelector((state: RootState) =>
+    const cartItemCount = useAppSelector((state: RootState) =>
         state.cart?.items?.length || 0
     );
 

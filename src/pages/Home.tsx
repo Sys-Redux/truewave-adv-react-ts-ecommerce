@@ -1,17 +1,27 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../hooks/useAppDispatch';
+import { selectCurrentUser } from '../store/authSlice';
 import { useProductsByCategory } from '../hooks/useProducts';
 import { ProductList } from '../components/products/ProductList';
 import { CategoryFilter } from '../components/products/CategoryFilter';
 import { addToCart } from '../store/cartSlice';
+import { errorfulToast } from '../utils/toasts';
 import type { Product } from '../types/product';
 
 export const Home = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const user = useAppSelector(selectCurrentUser);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const { data: products, isLoading, error } = useProductsByCategory(selectedCategory || '');
 
     const handleAddToCart = (product: Product) => {
+        if (!user) {
+            errorfulToast('❌ Please log in to add items to your cart');
+            navigate('/login');
+            return;
+        }
         // Dispatch Redux action to add product to cart
         dispatch(addToCart(product));
     };
@@ -25,6 +35,18 @@ export const Home = () => {
                 <div className='mb-8 relative'>
                     <div className='absolute inset-0 bg-linear-to-r from-accent/10 via-secondary/10 to-accent/10 blur-3xl' />
                     <div className='relative z-10'>
+                        {/* Personalized greeting */}
+                        {user && (
+                            <div className='mb-4 flex items-center gap-2'>
+                                <div className='w-2 h-2 bg-success rounded-full animate-pulse' />
+                                <p className='text-text-muted text-sm font-mono'>
+                                    Welcome back, <span className='text-accent font-bold'>
+                                        {user.displayName || user.email.split('@')[0]}
+                                    </span>!
+                                </p>
+                            </div>
+                        )}
+
                         <h2 className='text-4xl font-bold mb-3'>
                             <span className='text-text-primary'>Featured </span>
                             <span className='text-gradient-cyber'>Products</span>
@@ -36,6 +58,39 @@ export const Home = () => {
                             </span>
                         </p>
                     </div>
+
+                    {/* Auth CTA Banner - Only Show if not Logged In */}
+                    {!user && (
+                        <div className='mt-6 mb-4 p-4 bg-linear-to-r from-accent/10 to-secondary/10
+                            border border-accent/30 rounded-xl backdrop-blur-sm'>
+                            <div className='flex items-center justify-between gap-4 flex-wrap'>
+                                <div>
+                                    <p className='text-text-primary font-bold text-lg mb-1'>
+                                        🎉 New here? Create an account!
+                                    </p>
+                                    <p className='text-text-muted font-mono text-sm'>
+                                        Sign up now to enjoy exclusive benefits and offers.
+                                    </p>
+                                </div>
+                                <div className='flex gap-3'>
+                                    <button
+                                        onClick={() => navigate('/login')}
+                                        className='px-4 py-2 border border-border hover:border-accent
+                                            rounded-lg transition-all font-medium'
+                                    >
+                                        Log In
+                                    </button>
+                                    <button
+                                        onClick={() => navigate('/register')}
+                                        className='px-4 py-2 bg-gradient-cyber text-bg-primary
+                                            rounded-lg hover:shadow-cyan transition-all font-bold'
+                                    >
+                                        Sign Up
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Category Filter */}
                     <div className='mb-8'>

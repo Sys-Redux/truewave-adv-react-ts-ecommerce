@@ -56,12 +56,22 @@ export const logout = createAsyncThunk<void, void>(
 );
 
 // Update User Profile
-export const updateProfile = createAsyncThunk<void, ProfileUpdateData>(
+export const updateProfile = createAsyncThunk<User, ProfileUpdateData>(
     'auth/updateProfile',
     async (data, { rejectWithValue }) => {
         try {
             await authService.updateUserProfile(data);
-            // After update, firebase will auto-update the user via onAuthStateChanged
+            // Get fresh user data after update
+            const currentUser = auth.currentUser;
+            if (!currentUser) {
+                throw new Error('No authenticated user after profile update');
+            }
+
+            // Force Firebase to refresh user data
+            await currentUser.reload();
+
+            // Return the updated user to Redux
+            return authService.mapFirebaseUser(currentUser);
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : 'Profile update failed';
             return rejectWithValue(message);
@@ -140,7 +150,8 @@ const authSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(updateProfile.fulfilled, (state) => {
+            .addCase(updateProfile.fulfilled, (state, action) => {
+                state.user = action.payload;
                 state.loading = false;
             })
             .addCase(updateProfile.rejected, (state, action) => {

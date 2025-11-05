@@ -306,36 +306,40 @@ export const Profile = () => {
                             </div>
                         </form>
                     )}
+                </div>
 
-                    {/* Danger Zone */}
+                {/* Danger Zone */}
+                {isEditing && (
                     <div className='bg-bg-secondary border-2 border-error/50 rounded-2xl p-8 shadow-xl'>
                         <div className='flex items-start gap-4 mb-6'>
                             <div className='shrink-0'>
-                                <AlertTriangle className='w-6 h-6 text-error' />
+                                <div className='w-12 h-12 bg-error/20 rounded-xl flex items-center justify-center'>
+                                    <AlertTriangle className='w-6 h-6 text-error' />
+                                </div>
+                            </div>
+                            <div>
+                                <h3 className='text-xl font-bold text-error mb-2'>Danger Zone</h3>
+                                <p className='text-text-muted text-sm'>
+                                    Deleting your account is irreversible. All your data will be lost.
+                                </p>
                             </div>
                         </div>
-                        <div>
-                            <h3 className='text-xl font-bold text-error mb-2'>Danger Zone</h3>
-                            <p className='text-text-muted text-sm'>
-                                Deleting your account is irreversible. All your data will be lost.
-                            </p>
-                        </div>
-                    </div>
 
-                    <button
-                        onClick={() => setShowDeleteModal(true)}
-                        className='flex items-center gap-2 px-6 py-3 bg-error/10 hover:bg-error/20
-                            border-2 border-error text-error font-bold rounded-lg transition-all group'
-                    >
-                        <Trash2 className='w-5 h-5 group-hover:scale-110 transition-transform' />
-                        <span>Delete Account</span>
-                    </button>
-                </div>
+                        <button
+                            onClick={() => setShowDeleteModal(true)}
+                            className='flex items-center gap-2 px-6 py-3 bg-error/10 hover:bg-error/20
+                                border-2 border-error text-error font-bold rounded-lg transition-all group'
+                        >
+                            <Trash2 className='w-5 h-5 group-hover:scale-110 transition-transform' />
+                            <span>Delete Account</span>
+                        </button>
+                    </div>
+                )}
             </div>
 
             {/* Delete Confirmation Modal */}
             {showDeleteModal && (
-                <div className='fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center z-50 p-4'>
+                <div className='fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4'>
                     <div className='bg-bg-secondary border-2 border-error rounded-2xl p-8 shadow-2xl max-w-md w-full'>
 
                         {/* Modal Header */}
