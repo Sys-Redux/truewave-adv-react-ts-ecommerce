@@ -13,8 +13,8 @@ export interface Order {
     items: OrderItem[];
     totalAmount: number;
     status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string; // ISO string for serialization
+    updatedAt: string; // ISO string for serialization
 }
 
 export type CreateOrderData = Omit<Order, 'id' | 'createdAt' | 'updatedAt'>;

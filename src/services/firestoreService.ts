@@ -20,15 +20,24 @@ import type { Order, CreateOrderData } from '../types/order';
 const productsCollection = collection(db, 'products');
 const ordersCollection = collection(db, 'orders');
 
-// Convert Firestore Timestamp to JavaScript Date
+// Convert Firestore Timestamp to ISO string for serialization
 const convertTimestamps = <T extends Record<string, unknown>>(data: T): T => {
     const converted: Record<string, unknown> = { ...data };
+
+    // Handle createdAt - convert to ISO string
     if (data.createdAt instanceof Timestamp) {
-        converted.createdAt = data.createdAt.toDate();
+        converted.createdAt = data.createdAt.toDate().toISOString();
+    } else if (data.createdAt === null || data.createdAt === undefined) {
+        converted.createdAt = new Date().toISOString();
     }
+
+    // Handle updatedAt - convert to ISO string
     if (data.updatedAt instanceof Timestamp) {
-        converted.updatedAt = data.updatedAt.toDate();
+        converted.updatedAt = data.updatedAt.toDate().toISOString();
+    } else if (data.updatedAt === null || data.updatedAt === undefined) {
+        converted.updatedAt = new Date().toISOString();
     }
+
     return converted as T;
 };
 

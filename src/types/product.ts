@@ -1,5 +1,3 @@
-import { Timestamp } from "firebase/firestore";
-
 export interface Product {
     id: string;
     title: string;
@@ -10,8 +8,8 @@ export interface Product {
     imagePath?: string;
     rating: number;
     ratingCount: number;
-    createdAt?: Timestamp;
-    updatedAt?: Timestamp;
+    createdAt: string; // ISO string for serialization
+    updatedAt: string; // ISO string for serialization
 }
 
 export type Category = string;
