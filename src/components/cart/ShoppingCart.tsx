@@ -4,31 +4,69 @@ import { CartItem } from './CartItem';
 import { clearCart, selectCartItems, selectCartTotal, selectCartItemCount } from '../../store/cartSlice';
 import type { RootState } from '../../store/store';
 import { Toaster } from 'react-hot-toast';
-import { checkoutToast } from '../../utils/toasts';
+import { checkoutToast, errorfulToast } from '../../utils/toasts';
+import { useCreateOrder } from '../../hooks/useOrders';
+import { useAppSelector } from '../../hooks/useAppDispatch';
+import { selectCurrentUser } from '../../store/authSlice';
+import type { OrderItem } from '../../types/order';
 
 export const ShoppingCart = () => {
     const dispatch = useDispatch();
+    const user = useAppSelector(selectCurrentUser);
     const cartItems = useSelector((state: RootState) => selectCartItems(state));
     const subTotal = useSelector((state: RootState) => selectCartTotal(state));
     const itemCount = useSelector((state: RootState) => selectCartItemCount(state));
+    const createOrderMutation = useCreateOrder();
 
     // Taxes
     const TAX_RATE = 0.0725; // 7.25%
     const tax = subTotal * TAX_RATE;
     const total = subTotal + tax;
 
-    const handleCheckout = () => {
-        // Simulating Checkout
-        if (window.confirm('Proceed to checkout?')) {
+    const handleCheckout = async () => {
+        if (!user) {
+            errorfulToast('❌ Please log in to proceed to checkout');
+            return;
+        }
+
+        // Confirm Checkout
+        if (!window.confirm(`Proceed to checkout with total amount $${total.toFixed(2)}?`)) {
+            return;
+        }
+
+        try {
+            // Convert Cart Items to Order Items
+            const orderItems: OrderItem[] = cartItems.map(item => ({
+                productId: item.product.id,
+                title: item.product.title,
+                price: item.product.price,
+                quantity: item.quantity,
+                imageURL: item.product.imageURL,
+            }));
+
+            // Create Order in Firestore
+            const orderId = await createOrderMutation.mutateAsync({
+                userId: user.uid,
+                userEmail: user.email || '',
+                items: orderItems,
+                totalAmount: total,
+                status: 'pending',
+            });
+
+            // Clear Cart After Successful Checkout
             dispatch(clearCart());
             checkoutToast(itemCount, total);
-        };
+            console.log('Order ID:', orderId);
+        } catch (error) {
+            console.error('Checkout Error:', error);
+            errorfulToast('❌ Checkout failed. Please try again.');
+        }
     };
 
     const handleClearCart = () => {
         if (window.confirm('Are you sure you want to clear the cart?')) {
             dispatch(clearCart());
-        };
+        }
     };
 
     // If cart is empty

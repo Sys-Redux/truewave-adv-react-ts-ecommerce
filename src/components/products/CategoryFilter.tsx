@@ -52,9 +52,9 @@ export const CategoryFilter = ({
                         relative z-10'
                 >
                     <option value=''>All Categories</option>
-                    {categories?.map((category) => (
+                    {categories?.filter(Boolean).map((category) => (
                         <option key={category} value={category}>
-                            {category.charAt(0).toUpperCase() + category.slice(1)}
+                            {category ? category.charAt(0).toUpperCase() + category.slice(1) : 'Unknown'}
                         </option>
                     ))}
                 </select>

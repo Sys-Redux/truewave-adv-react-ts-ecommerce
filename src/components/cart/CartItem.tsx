@@ -40,7 +40,7 @@ export const CartItem = ({ item }: CartItemProps) => {
                 {/* Product Image */}
                 <div className='w-24 h-24 bg-bg-elevated rounded-md shrink-0 overflow-hidden'>
                     <img
-                        src={product.image}
+                        src={product.imageURL}
                         alt={product.title}
                         className='w-full h-full object-contain p-2'
                         onError={(e) => {

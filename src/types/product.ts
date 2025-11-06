@@ -1,16 +1,19 @@
-export interface ProductRating {
-    rate: number;
-    count: number;
-}
+import { Timestamp } from "firebase/firestore";
 
 export interface Product {
-    id: number;
+    id: string;
     title: string;
     price: number;
     description: string;
     category: string;
-    image: string;
-    rating: ProductRating;
+    imageURL: string;
+    imagePath?: string;
+    rating: number;
+    ratingCount: number;
+    createdAt?: Timestamp;
+    updatedAt?: Timestamp;
 }
 
 export type Category = string;
+
+export type ProductFormData = Omit<Product, 'id' | 'createdAt' | 'updatedAt' | 'rating' | 'ratingCount'>;

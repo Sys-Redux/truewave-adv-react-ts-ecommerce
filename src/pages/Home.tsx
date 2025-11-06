@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks/useAppDispatch';
 import { selectCurrentUser } from '../store/authSlice';
-import { useProductsByCategory } from '../hooks/useProducts';
+import { useProducts, useProductsByCategory } from '../hooks/useProducts';
 import { ProductList } from '../components/products/ProductList';
 import { CategoryFilter } from '../components/products/CategoryFilter';
 import { addToCart } from '../store/cartSlice';
@@ -14,7 +14,15 @@ export const Home = () => {
     const navigate = useNavigate();
     const user = useAppSelector(selectCurrentUser);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    const { data: products, isLoading, error } = useProductsByCategory(selectedCategory || '');
+
+    // Use different hooks based on whether a category is selected
+    const allProductsQuery = useProducts();
+    const categoryProductsQuery = useProductsByCategory(selectedCategory || '');
+
+    // Choose which query to use based on category selection
+    const { data: products, isLoading, error } = selectedCategory
+        ? categoryProductsQuery
+        : allProductsQuery;
 
     const handleAddToCart = (product: Product) => {
         if (!user) {

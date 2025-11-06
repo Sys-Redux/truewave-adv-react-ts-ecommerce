@@ -38,7 +38,7 @@ const cartSlice = createSlice({
         // Update quantity of a product
         updateQuantity: (
             state,
-            action: PayloadAction<{ productId: number; quantity: number }>
+            action: PayloadAction<{ productId: string; quantity: number }>
         ) => {
             const { productId, quantity } = action.payload;
             const item = state.items.find((item) => item.product.id === productId);
@@ -59,7 +59,7 @@ const cartSlice = createSlice({
         },
 
         // Remove item from cart
-        removeFromCart: (state, action: PayloadAction<number>) => {
+        removeFromCart: (state, action: PayloadAction<string>) => {
             const productId = action.payload;
             const item = state.items.find((item) => item.product.id === productId);
             if (!item) return;

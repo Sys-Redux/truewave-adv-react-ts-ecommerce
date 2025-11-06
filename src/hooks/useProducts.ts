@@ -1,32 +1,94 @@
-import { useQuery } from '@tanstack/react-query';
-import { productApi } from '../services/api';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+    getAllProducts,
+    getProductsByCategory,
+    getProductById,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+} from '../services/firestoreService';
+import type { ProductFormData } from '../types/product';
 
-// Hook to fetch all products
+// Fetch All Products
 export const useProducts = () => {
     return useQuery({
         queryKey: ['products'],
-        queryFn: productApi.getAllProducts,
+        queryFn: getAllProducts,
+        staleTime: 5 * 60 * 1000,
     });
 };
 
-// Hook to fetch products by category
+// Fetch Products by Category
 export const useProductsByCategory = (category: string) => {
     return useQuery({
         queryKey: ['products', 'category', category],
-        queryFn: () =>
-            category
-                ? productApi.getProductsByCategory(category)
-                : productApi.getAllProducts(),
-        enabled: true,
-        staleTime: 1000 * 60 * 5, // 5 minutes
+        queryFn: () => getProductsByCategory(category),
+        enabled: !!category,
+        staleTime: 5 * 60 * 1000,
     });
 };
 
-// Hook to fetch all categories
+// Fetch Product by ID
+export const useProduct = (productId: string) => {
+    return useQuery({
+        queryKey: ['products', productId],
+        queryFn: () => getProductById(productId),
+        staleTime: 5 * 60 * 1000,
+    });
+};
+
+// Fetch All Categories
 export const useCategories = () => {
     return useQuery({
         queryKey: ['categories'],
-        queryFn: productApi.getCategories,
-        staleTime: 1000 * 60 * 5, // 5 minutes
+        queryFn: async () => {
+            const products = await getAllProducts();
+            // Filter out any products without a category and remove duplicates
+            const categories = [...new Set(products
+                .map(p => p.category)
+                .filter(Boolean))] as string[];
+            return categories.sort();
+        },
+        staleTime: 10 * 60 * 1000,
+    });
+};
+
+// Create New Product
+export const useCreateProduct = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (productData: ProductFormData) => createProduct(productData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['products'] });
+        },
+    });
+};
+
+// Update Existing Product
+export const useUpdateProduct = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({
+            productId,
+            productData,
+        }: {
+            productId: string;
+            productData: Partial<ProductFormData>;
+        }) => updateProduct(productId, productData),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ['products', variables.productId] });
+            queryClient.invalidateQueries({ queryKey: ['products'] });
+        },
+    });
+};
+
+// Delete Product
+export const useDeleteProduct = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (productId: string) => deleteProduct(productId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['products'] });
+        },
     });
 };

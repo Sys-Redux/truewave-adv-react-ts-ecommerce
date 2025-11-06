@@ -39,7 +39,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
                     </div>
                 )}
                 <img
-                    src={imageError ? placeholderImage : product.image}
+                    src={imageError ? placeholderImage : product.imageURL}
                     alt={product.title}
                     onError={handleImageError}
                     onLoad={handleImageLoad}
@@ -69,11 +69,11 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
                         rounded-md border border-border'>
                         <Star className='w-4 h-4 text-accent fill-accent' />
                         <span className='text-text-primary text-sm ml-1 font-mono'>
-                            {product.rating.rate.toFixed(1)}
+                            {product.rating.toFixed(1)}
                         </span>
                     </div>
                     <span className='text-text-muted text-sm'>
-                        ({product.rating.count} reviews)
+                        ({product.ratingCount} reviews)
                     </span>
                 </div>
                 {/* Price and Add to Cart */}
