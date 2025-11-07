@@ -5,7 +5,9 @@ import { Cart } from './pages/Cart';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Profile } from './pages/Profile';
+import { Admin } from './pages/Admin';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { AdminRoute } from './components/auth/AdminRoute';
 
 function App() {
 
@@ -34,6 +36,16 @@ function App() {
                 <ProtectedRoute>
                   <Profile />
                 </ProtectedRoute>
+              }
+            />
+
+            {/* Admin Routes */}
+            <Route
+              path='/admin'
+              element={
+                <AdminRoute>
+                  <Admin />
+                </AdminRoute>
               }
             />
           </Routes>

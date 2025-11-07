@@ -1,4 +1,4 @@
-import { ShoppingCart, Home as HomeIcon, Sun, Moon, User, LogOut, UserCircle, ChevronDown, Settings } from 'lucide-react';
+import { ShoppingCart, Home as HomeIcon, Sun, Moon, User, LogOut, UserCircle, ChevronDown, Settings, Package } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
@@ -246,6 +246,33 @@ export const Header = ({ cartItemCount, onCartClick }: HeaderProps) => {
                           </p>
                         </div>
                       </button>
+
+                      {/* Admin Panel Button */}
+                      {user.isAdmin && (
+                        <>
+                          <button
+                            onClick={() => {
+                              setIsDropdownOpen(false);
+                              navigate('/admin');
+                            }}
+                            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-bg-elevated
+                              transition-colors group text-left"
+                          >
+                            <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center
+                              group-hover:bg-accent/20 transition-colors">
+                              <Package className="w-5 h-5 text-accent" />
+                            </div>
+                            <div>
+                              <p className="text-text-primary font-medium group-hover:text-accent transition-colors">
+                                Admin Panel
+                              </p>
+                              <p className="text-text-muted text-xs">
+                                Manage products and orders
+                              </p>
+                            </div>
+                          </button>
+                        </>
+                      )}
 
                       {/* Divider */}
                       <div className="my-2 border-t border-border" />

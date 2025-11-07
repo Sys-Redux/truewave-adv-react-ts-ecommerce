@@ -6,6 +6,7 @@ import {
     addDoc,
     updateDoc,
     deleteDoc,
+    setDoc,
     query,
     where,
     orderBy,
@@ -230,5 +231,99 @@ export const getOrderById = async (orderId: string): Promise<Order | null> => {
     } catch (error) {
         console.error('Error fetching order by ID:', error);
         throw new Error('Failed to fetch order by ID');
+    }
+};
+
+// ======================================================================================
+// User Service Functions
+// ======================================================================================
+
+// Firestore User Document Type (what we store in Firestore)
+export interface FirestoreUserData {
+    uid: string;
+    email: string;
+    displayName: string | null;
+    photoURL: string | null;
+    isAdmin: boolean;
+    createdAt: string | Timestamp;
+    updatedAt: string | Timestamp;
+}
+
+// Create User Document in Firestore
+export const createUserDocument = async (
+    uid: string,
+    email: string,
+    displayName: string | null = null,
+    photoURL: string | null = null
+): Promise<void> => {
+    try {
+        const userDocRef = doc(db, 'users', uid);
+        await setDoc(userDocRef, {
+            uid,
+            email,
+            displayName,
+            photoURL,
+            isAdmin: false, // Default to non-admin
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+        });
+    } catch (error) {
+        console.error('Error creating user document:', error);
+        throw new Error('Failed to create user document');
+    }
+};
+
+// Get User Document from Firestore
+export const getUserDocument = async (uid: string): Promise<FirestoreUserData | null> => {
+    try {
+        const userDocRef = doc(db, 'users', uid);
+        const userSnap = await getDoc(userDocRef);
+
+        if (userSnap.exists()) {
+            return convertTimestamps(userSnap.data()) as FirestoreUserData;
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error fetching user document:', error);
+        throw new Error('Failed to fetch user document');
+    }
+};
+
+// Update User Document in Firestore
+export const updateUserDocument = async (
+    uid: string,
+    data: Partial<Omit<FirestoreUserData, 'uid' | 'createdAt' | 'updatedAt'>>
+): Promise<void> => {
+    try {
+        const userDocRef = doc(db, 'users', uid);
+        await updateDoc(userDocRef, {
+            ...data,
+            updatedAt: serverTimestamp(),
+        });
+    } catch (error) {
+        console.error('Error updating user document:', error);
+        throw new Error('Failed to update user document');
+    }
+};
+
+// Delete User Document from Firestore
+export const deleteUserDocument = async (uid: string): Promise<void> => {
+    try {
+        const userDocRef = doc(db, 'users', uid);
+        await deleteDoc(userDocRef);
+    } catch (error) {
+        console.error('Error deleting user document:', error);
+        throw new Error('Failed to delete user document');
+    }
+};
+
+// Set Admin Status
+export const setUserAdminStatus = async (uid: string, isAdmin: boolean): Promise<void> => {
+    try {
+        await updateUserDocument(uid, { isAdmin });
+    } catch (error) {
+        console.error('Error setting admin status:', error);
+        throw new Error('Failed to set admin status');
     }
 };

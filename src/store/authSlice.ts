@@ -70,8 +70,8 @@ export const updateProfile = createAsyncThunk<User, ProfileUpdateData>(
             // Force Firebase to refresh user data
             await currentUser.reload();
 
-            // Return the updated user to Redux
-            return authService.mapFirebaseUser(currentUser);
+            // Return the updated user to Redux (with Firestore data)
+            return await authService.mapFirebaseUser(currentUser);
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : 'Profile update failed';
             return rejectWithValue(message);
@@ -179,12 +179,19 @@ export const selectAuthInitialized = (state: RootState) => state.auth.initialize
 // ==================================================================================
 
 // KEY FUNCTION: Call this once on app startup to listen for auth state changes
-
 export const initializeAuthListener = (dispatch: AppDispatch): (() => void) => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
         if (firebaseUser) {
-            const user = authService.mapFirebaseUser(firebaseUser);
-            dispatch(setUser(user));
+            try {
+                // Fetch user data from Firestore (includes isAdmin)
+                const user = await authService.mapFirebaseUser(firebaseUser);
+                dispatch(setUser(user));
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                // Fallback to basic user data if Firestore fails
+                const basicUser = authService.mapFirebaseUserSync(firebaseUser, false);
+                dispatch(setUser(basicUser));
+            }
         } else {
             dispatch(setUser(null));
         }
